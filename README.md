@@ -13,10 +13,12 @@ npm run dev        # http://localhost:5173  (live reload)
 ```
 
 Production build:
+
 ```bash
 npm run build      # outputs /dist  (static files, ready to host)
 npm run preview    # test the production build locally
 ```
+
 A prebuilt `dist/` is included, so you can also upload it straight to Netlify / Vercel / GitHub Pages / any static host (paths are relative).
 
 > Google Fonts (Cormorant Garamond + Jost) load from the internet; offline it falls back to Georgia / system sans.
@@ -35,17 +37,17 @@ The saree visuals are **built-in vector illustrations** (`src/art/SareeArt.jsx`)
 
 To use **your own photography**, drop files into `src/assets/img/` with these names (jpg / jpeg / png / webp). Any file present replaces its illustration automatically; missing ones keep the illustration:
 
-| File | Slot |
-|---|---|
-| `hero` | Hero model (portrait, ~1200×1600) |
-| `explore-bg` | Background of "Explore the Collection" |
-| `women`, `kalakari` | Two large tiles (4:5) |
-| `kala-1`, `kala-2`, `kala-3` | Kalakari cards (3:4.4) |
-| `look-1` … `look-5` | Lookbook panels (tall) |
-| `sarees` | Left half of "Sarees, draped in every mood" |
-| `printed`, `collection` | Two thumbnails (3:4) |
-| `p1` … `p6` | Best-seller products (3:4.3) |
-| `story` | Background of "Our Story" |
+| File                         | Slot                                        |
+| ---------------------------- | ------------------------------------------- |
+| `hero`                       | Hero model (portrait, ~1200×1600)           |
+| `explore-bg`                 | Background of "Explore the Collection"      |
+| `women`, `kalakari`          | Two large tiles (4:5)                       |
+| `kala-1`, `kala-2`, `kala-3` | Kalakari cards (3:4.4)                      |
+| `look-1` … `look-5`          | Lookbook panels (tall)                      |
+| `sarees`                     | Left half of "Sarees, draped in every mood" |
+| `printed`, `collection`      | Two thumbnails (3:4)                        |
+| `p1` … `p6`                  | Best-seller products (3:4.3)                |
+| `story`                      | Background of "Our Story"                   |
 
 Keep each under ~300 KB (compress with squoosh.app). Restart `npm run dev` after adding new files.
 
@@ -58,6 +60,7 @@ Keep each under ~300 KB (compress with squoosh.app). Restart `npm run dev` after
 - Section order: `src/App.jsx`.
 
 ## 5. Structure
+
 ```
 src/
   App.jsx            page + Lenis + preloader flow
@@ -69,3 +72,32 @@ src/
                      Cursor, Progress, Tilt, Magnetic, Particles, Media, Split
   assets/img/        <- your photos
 ```
+
+Tech stack (React version)
+
+React 18, with function components and hooks.
+Vite 5 for the dev server and production build, with @vitejs/plugin-react.
+Plain CSS in one stylesheet, using CSS variables, grid and flexbox, and media queries for responsiveness. There is no Tailwind or UI library.
+Google Fonts: Cormorant Garamond for headings and Jost for body text.
+SVG for the saree illustrations. They are React components with gradients and patterns.
+HTML canvas for the floating gold dust.
+
+Animation libraries
+
+GSAP 3.12 drives nearly all the motion: timelines, quickTo for the cursor and parallax, matchMedia for desktop and mobile behaviour, and context for clean React cleanup.
+GSAP ScrollTrigger handles scroll-linked effects: pinning, scrubbing, parallax and reveals.
+Lenis provides the smooth scrolling, wired into GSAP’s ticker so the two stay in sync.
+
+Effects and how they’re done
+
+Preloader: a GSAP timeline with SVG stroke-draw for the logo, letter-by-letter rise, a counter, and curtains that slide apart.
+Text reveals: text is split into lines, words or characters in React, then animated with masked slide-ups.
+Image reveals: clip-path and scale animations on scroll.
+Pinned horizontal Best Sellers: ScrollTrigger pin with a scrubbed horizontal translate.
+Scroll-highlighted paragraph: per-word opacity scrubbed by scroll.
+Drawing line: SVG stroke-dashoffset scrubbed by scroll.
+3D tilt cards: GSAP rotation with perspective and a glare overlay.
+Magnetic buttons and custom cursor: mouse tracking with quickTo.
+Velocity marquee: ScrollTrigger scroll velocity changes the timeline speed.
+Lookbook accordion: CSS flex transitions.
+Mobile menu: a CSS clip-path reveal.
